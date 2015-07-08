@@ -19,5 +19,5 @@ from StuInfo.views import *
 
 urlpatterns = [
     #url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', hello),
+    url(r'^$', index),
 ]
