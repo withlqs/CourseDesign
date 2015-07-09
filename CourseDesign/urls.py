@@ -20,4 +20,5 @@ from StuInfo.views import *
 urlpatterns = [
     #url(r'^admin/', include(admin.site.urls)),
     url(r'^$', index),
+    url(r'^search_form/$', search_form),
 ]

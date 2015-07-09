@@ -4,6 +4,9 @@ import datetime
 
 # Create your views here.
 
+def search_form(request):
+    return render_to_response('search_form.html');
+
 def index(request):
     return render_to_response('index.html', {'current_date': datetime.datetime.now()})
 
