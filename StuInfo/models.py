@@ -1,4 +1,5 @@
 from django.db import models
+from StuInfo import *
 
 # Create your models here.
 
@@ -23,4 +24,4 @@ class User(models.Model):
     Type = models.SmallIntegerField()
     PasswordHash = models.CharField(max_length = PasswordHashMaxLen)
     Email = models.EmailField()
-    
+

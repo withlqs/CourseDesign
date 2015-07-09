@@ -1,15 +1,21 @@
 from django.shortcuts import *
 from django.http import *
-from StuInfo.forms import *
+from StuInfo import forms
+from StuInfo import models
+from StuInfo.stuinfo_control import FormToModel
 import datetime
 
 # Create your views here.
 
 def add(request):
     if request.method == 'POST':
-        form = AddForm(request.POST)
+        form = forms.AddForm(request.POST)
+        if form.is_valid():
+            info = FormToModel(form)
+            info.save()
+            return HttpResponseRedirect('/successful/')
     else:
-        form = AddForm()
+        form = forms.AddForm()
 
     return render_to_response('add_form.html', {'form': form})
 
