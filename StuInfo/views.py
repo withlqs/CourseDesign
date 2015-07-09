@@ -20,12 +20,20 @@ def add(request):
     return render_to_response('add.html', {'form': form})
 
 def search(request):
-    if request.method == 'POST':
-        form = forms
-    else:
-        form = Default
-
     return render_to_response('search.html')
+
+def view(request):
+    if request == 'POST':
+        ElementList = ['StudentID', 'Name', 'PhoneNumber', 'Email', 'Address', 'Birthday']
+        for Element in ElementList:
+            if request.POST.getlist(Element+'Enable'):
+                if request.POST.getlist(Element+'Part'):
+
+
+
+
+    raise Http404
+
 
 def successful(request):
     return render_to_response('successful.html')

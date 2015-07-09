@@ -5,5 +5,15 @@
 {% endblock %}
 
 {% block body %}
-
+<center>
+    <form name="input" action="/view/" method="post">
+        <input type="checkbox" name="StudentIDEnable" />搜索 学号<input type="text" name="StudentID" maxlength="15" /> <input type="checkbox" name="StudentIDPart" />部分匹配<br/>
+        <input type="checkbox" name="NameEnable" />搜索 姓名<input type="text" name="Name" maxlength="15" /> <input type="checkbox" name="NamePart" />部分匹配<br/>
+        <input type="checkbox" name="PhoneNumberEnable" />搜索 电话<input type="text" name="PhoneNumber" maxlength="15" /> <input type="checkbox" name="PhoneNumberPart" />部分匹配<br/>
+        <input type="checkbox" name="EmailEnable" />搜索 E-mail<input type="text" name="Email" maxlength="15" /> <input type="checkbox" name="EmailPart" />部分匹配<br/>
+        <input type="checkbox" name="AddressEnable" />搜索 地址<input type="text" name="Address" maxlength="15" /> <input type="checkbox" name="AddressPart" />部分匹配<br/>
+        <input type="checkbox" name="BirthdayEnable" />搜索 生日<input type="text" name="Birthday" maxlength="15" /> <input type="checkbox" name="BirthdayPart" />部分匹配<br/>
+        <input type="submit" value="搜索" />
+    </form>
+</center>
 {% endblock %}
