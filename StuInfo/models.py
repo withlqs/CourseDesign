@@ -9,7 +9,7 @@ class Student(models.Model):
     PhoneNumberMaxLen = 20
     AddressMaxLen = 100
 
-    StudentID = models.CharField(max_length = StudentIDMaxLen)
+    StudentID = models.CharField(null = False, unique = True, max_length = StudentIDMaxLen)
     Name = models.CharField(max_length = NameMaxLen)
     PhoneNumber = models.CharField(max_length = PhoneNumberMaxLen)
     Email = models.EmailField()
