@@ -9,12 +9,12 @@ class Student(models.Model):
     PhoneNumberMaxLen = 20
     AddressMaxLen = 100
 
-    StudentID = models.CharField(null = False, unique = True, max_length = StudentIDMaxLen)
-    Name = models.CharField(max_length = NameMaxLen)
+    StudentID = models.CharField(unique = True, null = False, max_length = StudentIDMaxLen)
+    Name = models.CharField(null = False, max_length = NameMaxLen)
     PhoneNumber = models.CharField(max_length = PhoneNumberMaxLen)
     Email = models.EmailField()
     Address = models.CharField(max_length = AddressMaxLen)
-    Birthday = models.DateField()
+    Birthday = models.DateField(null = False)
 
     def __str__(self):
         return self.StudentID
@@ -23,8 +23,8 @@ class User(models.Model):
     UserIDMaxLen = 20
     PasswordHashMaxLen = 50
 
-    UserID = models.CharField(max_length = UserIDMaxLen)
-    Type = models.SmallIntegerField()
-    PasswordHash = models.CharField(max_length = PasswordHashMaxLen)
+    UserID = models.CharField(unique = True, null = False, max_length = UserIDMaxLen)
+    Type = models.SmallIntegerField(null = False)
+    PasswordHash = models.CharField(null = False, max_length = PasswordHashMaxLen)
     Email = models.EmailField()
 
