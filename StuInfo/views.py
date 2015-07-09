@@ -17,7 +17,15 @@ def add(request):
     else:
         form = forms.AddForm()
 
-    return render_to_response('add_form.html', {'form': form})
+    return render_to_response('add.html', {'form': form})
+
+def search(request):
+    if request.method == 'POST':
+        form = forms
+    else:
+        form = Default
+
+    return render_to_response('search.html')
 
 def successful(request):
     return render_to_response('successful.html')
