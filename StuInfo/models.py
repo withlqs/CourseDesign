@@ -16,6 +16,9 @@ class Student(models.Model):
     Address = models.CharField(max_length = AddressMaxLen)
     Birthday = models.DateField()
 
+    def __str__(self):
+        return self.StudentID
+
 class User(models.Model):
     UserIDMaxLen = 20
     PasswordHashMaxLen = 50
