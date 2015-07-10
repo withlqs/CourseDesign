@@ -20,6 +20,18 @@ def add(request):
 
     return render_to_response('add.html', {'form': form})
 
+def delete(request):
+    if request.method == 'GET':
+        query_set = models.Student.objects.filter(StudentID=request.GET['StudentID'])
+        if query_set:
+            query_set.delete()
+            return HttpResponseRedirect('/successful/')
+
+    raise Http404
+
+def modify(request):
+    raise Http404
+
 def search(request):
     return render_to_response('search.html')
 

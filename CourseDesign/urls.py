@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^add/$', add),
     url(r'^search/$', search),
     url(r'^view/$', view),
-    #url(r'^delete/$', delete),
+    url(r'^delete/$', delete),
+    url(r'^modify/$', modify),
     url(r'^successful/$', successful),
 ]
