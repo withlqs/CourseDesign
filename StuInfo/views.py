@@ -3,7 +3,7 @@ from django.shortcuts import *
 from django.http import *
 from StuInfo import forms
 from StuInfo import models
-from StuInfo.stuinfo_control import FormToModel
+from StuInfo import control
 import datetime
 
 # Create your views here.
@@ -12,7 +12,7 @@ def add(request):
     if request.method == 'POST':
         form = forms.AddForm(request.POST)
         if form.is_valid():
-            info = FormToModel(form)
+            info = control.FormToModel(form)
             info.save()
             return HttpResponseRedirect('/successful/')
     else:
@@ -30,6 +30,18 @@ def delete(request):
     raise Http404
 
 def modify(request):
+    if request.method == 'GET':
+        query_set = models.Student.objects.filter(StudentID=request.GET['StudentID'])
+        if query_set:
+            form = control.ModelToForm(query_set[0])
+            return render_to_response('modify.html', {'form': form})
+    if request.method == 'POST':
+        form = forms.AddForm(request.POST)
+        if form.is_valid():
+            models.Student.objects.filter(StudentID=request.POST['StudentID']).delete()
+            info = control.FormToModel(form)
+            info.save()
+            return HttpResponseRedirect('/successful/')
     raise Http404
 
 def search(request):

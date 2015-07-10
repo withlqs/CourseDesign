@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>修改信息</title>
+<title>Modify</title>
 {% endblock %}
 
 {% block body %}
-
+<center>
+<form action="/modify/" method="post">
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="提交">
+</form>
+</center>
 {% endblock %}
+
