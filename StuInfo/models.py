@@ -16,8 +16,9 @@ class Student(models.Model):
     Address = models.CharField(max_length = AddressMaxLen)
     Birthday = models.DateField(null = False)
 
-    def __str__(self):
-        return self.StudentID
+    def __getitem__(self, key):
+        if key == 'StudentID':
+            return self.StudentID
 
 class User(models.Model):
     UserIDMaxLen = 20

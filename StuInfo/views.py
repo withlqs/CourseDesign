@@ -23,16 +23,25 @@ def search(request):
     return render_to_response('search.html')
 
 def view(request):
-    if request == 'POST':
-        ElementList = ['StudentID', 'Name', 'PhoneNumber', 'Email', 'Address', 'Birthday']
-        for Element in ElementList:
-            if request.POST.getlist(Element+'Enable'):
-                if request.POST.getlist(Element+'Part'):
+    if request.method == 'POST':
+        remain = models.Student.objects
 
+        """ElementList = ['StudentID', 'Name', 'PhoneNumber', 'Email', 'Address', 'Birthday']"""
 
+        if request.POST.getlist('StudentIDEnable'):
+            if request.POST.getlist('StudentIDPart'):
+                remain = remain.filter(StudentID__icontains=request.POST['StudentID'])
+            else:
+                remain = remain.filter(StudentID=request.POST['StudentID'])
 
-
-    raise Http404
+        render_list = []
+        for item in list(remain.all()):
+            string_line = ''
+            string_line += r'<td>'+str(item.StudentID)+r'</td>'
+            render_list.append(string_line)
+        return render_to_response('view.html', {'query_list': render_list})
+    else:
+        raise Http404
 
 
 def successful(request):
