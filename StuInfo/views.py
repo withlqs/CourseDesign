@@ -1,3 +1,4 @@
+#-*- coding: UTF-8 -*- 
 from django.shortcuts import *
 from django.http import *
 from StuInfo import forms
@@ -33,13 +34,36 @@ def view(request):
                 remain = remain.filter(StudentID__icontains=request.POST['StudentID'])
             else:
                 remain = remain.filter(StudentID=request.POST['StudentID'])
+        if request.POST.getlist('NameEnable'):
+            if request.POST.getlist('NamePart'):
+                remain = remain.filter(Name__icontains=request.POST['Name'])
+            else:
+                remain = remain.filter(Name=request.POST['Name'])
+        if request.POST.getlist('PhoneNumberEnable'):
+            if request.POST.getlist('PhoneNumberPart'):
+                remain = remain.filter(PhoneNumber__icontains=request.POST['PhoneNumber'])
+            else:
+                remain = remain.filter(PhoneNumber=request.POST['PhoneNumber'])
+        if request.POST.getlist('EmailEnable'):
+            if request.POST.getlist('EmailPart'):
+                remain = remain.filter(Email__icontains=request.POST['Email'])
+            else:
+                remain = remain.filter(Email=request.POST['Email'])
+        if request.POST.getlist('AddressEnable'):
+            if request.POST.getlist('AddressPart'):
+                remain = remain.filter(Address__icontains=request.POST['Address'])
+            else:
+                remain = remain.filter(Address=request.POST['Address'])
+        if request.POST.getlist('BirthdayEnable'):
+            if request.POST.getlist('BirthdayPart'):
+                remain = remain.filter(Birthday__icontains=request.POST['Birthday'])
+            else:
+                remain = remain.filter(Birthday=request.POST['Birthday'])
 
         render_list = []
         for item in list(remain.all()):
-            string_line = ''
-            string_line += r'<td>'+str(item.StudentID)+r'</td>'
-            render_list.append(string_line)
-        return render_to_response('view.html', {'query_list': render_list})
+            render_list.append(item)
+        return render_to_response('view.html', {'render_list': render_list})
     else:
         raise Http404
 
@@ -49,7 +73,3 @@ def successful(request):
 
 def index(request):
     return render_to_response('index.html', {'current_date': datetime.datetime.now()})
-
-def time(request):
-    assert False;
-    return HttpResponse(datetime.datetime.now())

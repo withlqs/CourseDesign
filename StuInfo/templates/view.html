@@ -6,11 +6,19 @@
 
 {% block body %}
 <center>
-    <table border="1">
-        {% for item in query_list %}
-        <tr>{{ item }}</tr>
+    <table border="1" style="border-collapse:collapse;">
+    <tr>
+        {% for item in render_list %}
+        <td>{{ item.StudentID }}</td>
+        <td>{{ item.Name }}</td>
+        <td>{{ item.PhoneNumber }}</td>
+        <td>{{ item.Email }}</td>
+        <td>{{ item.Address }}</td>
+        <td>{{ item.Birthday }}</td>
+        <td><a href="/modify?StudentID={{ item.StudentID }}">修改</a></td>
+        <td><a href="/delete?StudentID={{ item.StudentID }}">删除</a></td>
         {% endfor %}
+    </tr>
     </table>
 </center>
-
 {% endblock %}

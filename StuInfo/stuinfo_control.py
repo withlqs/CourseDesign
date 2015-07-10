@@ -1,3 +1,4 @@
+#-*- coding: UTF-8 -*- 
 from StuInfo.models import Student
 
 def FormToModel(form):
