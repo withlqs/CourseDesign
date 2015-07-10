@@ -15,8 +15,8 @@
         <td>{{ item.Email }}</td>
         <td>{{ item.Address }}</td>
         <td>{{ item.Birthday }}</td>
-        <td><a href="/modify?StudentID={{ item.StudentID }}">修改</a></td>
-        <td><a href="/delete?StudentID={{ item.StudentID }}">删除</a></td>
+        <td><a href="/modify/?StudentID={{ item.StudentID }}">修改</a></td>
+        <td><a href="/delete/?StudentID={{ item.StudentID }}">删除</a></td>
         {% endfor %}
     </tr>
     </table>
