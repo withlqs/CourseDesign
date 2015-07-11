@@ -1,21 +1,20 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>Log In</title>
+<title>登录</title>
 {% endblock %}
 
 {% block body %}
-
 {% if form.errors %}
-<p class="error">Sorry, that's not a valid username or password</p>
+<p class="error">对不起，用户名或密码有误。</p>
 {% endif %}
 <form action="" method="post">{% csrf_token %}
-    <label for="username">User name:</label>
+    <label for="username">用户名:</label>
     <input type="text" name="username" value="" id="username">
-    <label for="password">Password:</label>
+    <label for="password">密码:</label>
     <input type="password" name="password" value="" id="password">
 
-    <input type="submit" value="login" />
+    <input type="submit" value="登录" />
     <input type="hidden" name="next" value="{{ next|escape }}" />
 </form>
 

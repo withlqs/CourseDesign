@@ -4,8 +4,12 @@
         {% block head %}{% endblock %}
     </head>
     <body>
-    <a href="/add/">添加信息</a> <a href="/search/">检索信息</a>
-
+    {% if logout %}当前用户：{{ user }}&nbsp;&nbsp;&nbsp;{% endif %}
+    {% if login %}<a href="/accounts/login/">用户登录</a>  {% endif %}
+    {% if not logout %}<a href="/accounts/register/">用户注册</a>  {% endif %}
+    {% if logout %}<a href="/accounts/logout/">退出登录</a>  {% endif %}
+    {% if add %}<a href="/add/">添加信息</a> {% endif %}
+    {% if search %}<a href="/search/">检索信息</a> {% endif %}
     <br/>
     <br/>
         {% block body %}

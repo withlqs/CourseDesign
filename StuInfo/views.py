@@ -3,6 +3,7 @@ from django.shortcuts import *
 from django.http import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import logout
+from django.db import IntegrityError
 from StuInfo import forms
 from StuInfo import models
 from StuInfo import control
@@ -32,7 +33,10 @@ def register(request):
             return HttpResponseRedirect('/accounts/login/')
     else:
         form = UserCreationForm()
-    return render_to_response('registration/register.html', {'form': form}, context_instance=RequestContext(request))
+    return render_to_response('registration/register.html', {
+        'form': form,
+        'login': True
+        }, context_instance=RequestContext(request))
 
 def add(request):
     if not request.user.is_authenticated():
@@ -41,12 +45,25 @@ def add(request):
         form = forms.AddForm(request.POST)
         if form.is_valid():
             info = control.FormToModel(form)
-            info.save()
+            try:
+                info.save()
+            except IntegrityError:
+                return render_to_response('duplicate.html', {
+                    'search': True,
+                    'add': True,
+                    'logout': True,
+                    'user': request.user.username
+                    })
             return HttpResponseRedirect('/successful/')
     else:
         form = forms.AddForm()
 
-    return render_to_response('add.html', {'form': form}, context_instance=RequestContext(request))
+    return render_to_response('add.html', {
+        'form': form,
+        'search': True,
+        'logout': True,
+        'user': request.user.username
+        }, context_instance=RequestContext(request))
 
 def delete(request):
     if not request.user.is_authenticated():
@@ -66,20 +83,38 @@ def modify(request):
         query_set = models.Student.objects.filter(StudentID=request.GET['StudentID'])
         if query_set:
             form = control.ModelToForm(query_set[0])
-            return render_to_response('modify.html', {'form': form}, context_instance=RequestContext(request))
+            return render_to_response('modify.html', {
+                'form': form,
+                'search': True,
+                'add': True,
+                'logout': True,
+                'user': request.user.username
+                }, context_instance=RequestContext(request))
     if request.method == 'POST':
         form = forms.AddForm(request.POST)
         if form.is_valid():
             models.Student.objects.filter(StudentID=request.POST['StudentID']).delete()
             info = control.FormToModel(form)
-            info.save()
+            try:
+                info.save()
+            except IntegrityError:
+                return render_to_response('duplicate.html', {
+                    'search': True,
+                    'add': True,
+                    'logout': True,
+                    'user': request.user.username
+                    })
             return HttpResponseRedirect('/successful/')
     raise Http404
 
 def search(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login/')
-    return render_to_response('search.html', context_instance=RequestContext(request))
+    return render_to_response('search.html', {
+        'add': True,
+        'logout': True,
+        'user': request.user.username
+        }, context_instance=RequestContext(request))
 
 def view(request):
     if not request.user.is_authenticated():
@@ -123,7 +158,13 @@ def view(request):
         render_list = []
         for item in list(remain.all()):
             render_list.append(item)
-        return render_to_response('view.html', {'render_list': render_list}, context_instance=RequestContext(request))
+        return render_to_response('view.html', {
+            'render_list': render_list,
+            'add': True,
+            'logout': True,
+            'search': True,
+            'user': request.user.username
+            }, context_instance=RequestContext(request))
     else:
         raise Http404
 
@@ -131,9 +172,20 @@ def view(request):
 def successful(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login/')
-    return render_to_response('successful.html', {}, context_instance=RequestContext(request))
+    return render_to_response('successful.html', {
+        'add': True,
+        'logout': True,
+        'search': True,
+        'user': request.user.username
+        }, context_instance=RequestContext(request))
 
 def index(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login/')
-    return render_to_response('index.html', {'current_date': datetime.datetime.now()}, context_instance=RequestContext(request))
+    return render_to_response('index.html', {
+        'current_date': datetime.datetime.now(),
+        'add': True,
+        'logout': True,
+        'search': True,
+        'user': request.user.username
+        }, context_instance=RequestContext(request))
