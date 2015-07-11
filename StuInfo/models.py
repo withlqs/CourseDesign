@@ -17,12 +17,3 @@ class Student(models.Model):
     Address = models.CharField(max_length = AddressMaxLen)
     Birthday = models.DateField(null = False)
 
-class User(models.Model):
-    UserIDMaxLen = 20
-    PasswordHashMaxLen = 50
-
-    UserID = models.CharField(unique = True, null = False, max_length = UserIDMaxLen)
-    Type = models.SmallIntegerField(null = False)
-    PasswordHash = models.CharField(null = False, max_length = PasswordHashMaxLen)
-    Email = models.EmailField()
-
