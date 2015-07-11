@@ -165,9 +165,20 @@ def view(request):
             'search': True,
             'user': request.user.username
             }, context_instance=RequestContext(request))
-    else:
+    
+    if request.method == 'GET':
+        if request.GET['all']:
+            render_list = []
+            for item in list(models.Student.objects.all()):
+                render_list.append(item)
+            return render_to_response('view.html', {
+                'render_list': render_list,
+                'add': True,
+                'logout': True,
+                'search': True,
+                'user': request.user.username
+                }, context_instance=RequestContext(request))
         raise Http404
-
 
 def successful(request):
     if not request.user.is_authenticated():

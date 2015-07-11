@@ -14,7 +14,7 @@ def FormToModel(form):
             )
 
 def ModelToForm(model):
-    return AddForm(
+    form = AddForm(
             initial = {
                 'StudentID': model.StudentID,
                 'Name': model.Name,
@@ -24,4 +24,6 @@ def ModelToForm(model):
                 'Birthday': model.Birthday
                 }
             )
+    form.fields['StudentID'].widget.attrs['readonly'] = True
+    return form
 

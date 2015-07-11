@@ -18,6 +18,8 @@
             <td><a href="/modify/?StudentID={{ item.StudentID }}">修改</a></td>
             <td><a href="/delete/?StudentID={{ item.StudentID }}">删除</a></td>
         </tr>
+        {% empty %}
+        无符合条件的信息
         {% endfor %}
     </table>
 </center>
