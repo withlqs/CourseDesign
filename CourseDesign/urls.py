@@ -30,5 +30,5 @@ urlpatterns = [
     url(r'^accounts/login/$', login),
     url(r'^accounts/logout/$', logout_view),
     url(r'^accounts/register/$', register),
-    url(r'^accounts/profile/$', index),
+    url(r'^accounts/profile/$', logined),
 ]

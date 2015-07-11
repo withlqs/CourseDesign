@@ -19,7 +19,7 @@ def logout_view(request):
 
 def logined(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/search/')
+        return HttpResponseRedirect('/')
 
     return HttpResponseRedirect('/accounts/login/')
 
@@ -167,7 +167,7 @@ def view(request):
             }, context_instance=RequestContext(request))
     
     if request.method == 'GET':
-        if request.GET['all']:
+        if request.GET['all'] == "1":
             render_list = []
             for item in list(models.Student.objects.all()):
                 render_list.append(item)
