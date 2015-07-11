@@ -2,7 +2,10 @@
 from django.shortcuts import *
 from django.http import *
 from django.contrib.auth.forms import UserCreationForm
+from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth import logout
+from django.contrib.auth import login
+from django.contrib.auth import authenticate
 from django.db import IntegrityError
 from StuInfo import forms
 from StuInfo import models
@@ -25,12 +28,13 @@ def logined(request):
 
 def register(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/search/')
+        return HttpResponseRedirect('/')
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             new_user = form.save()
-            return HttpResponseRedirect('/accounts/login/')
+            login(request, user = authenticate(username = form.cleaned_data['username'], password = form.cleaned_data['password1']))
+            return HttpResponseRedirect('/successful/?op=reg')
     else:
         form = UserCreationForm()
     return render_to_response('registration/register.html', {
@@ -54,7 +58,7 @@ def add(request):
                     'logout': True,
                     'user': request.user.username
                     })
-            return HttpResponseRedirect('/successful/')
+            return HttpResponseRedirect('/successful/?op=add')
     else:
         form = forms.AddForm()
 
@@ -72,7 +76,7 @@ def delete(request):
         query_set = models.Student.objects.filter(StudentID=request.GET['StudentID'])
         if query_set:
             query_set.delete()
-            return HttpResponseRedirect('/successful/')
+            return HttpResponseRedirect('/successful/?op=del')
 
     raise Http404
 
@@ -104,7 +108,7 @@ def modify(request):
                     'logout': True,
                     'user': request.user.username
                     })
-            return HttpResponseRedirect('/successful/')
+            return HttpResponseRedirect('/successful/?op=mod')
     raise Http404
 
 def search(request):
@@ -183,11 +187,26 @@ def view(request):
 def successful(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login/')
+    if request.method != 'GET':
+        raise Http404
+    op = {
+            'add': '添加',
+            'del': '删除',
+            'mod': '修改',
+            'reg': '注册'
+            }
+    try:
+        op_get = request.GET['op']
+    except MultiValueDictKeyError:
+        raise Http404
+    if not request.GET['op'] in op:
+        raise Http404
     return render_to_response('successful.html', {
         'add': True,
         'logout': True,
         'search': True,
-        'user': request.user.username
+        'user': request.user.username,
+        'operation': op[request.GET['op']]
         }, context_instance=RequestContext(request))
 
 def index(request):
