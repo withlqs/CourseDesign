@@ -1,12 +1,23 @@
 #-*- coding: UTF-8 -*- 
 from django.shortcuts import *
 from django.http import *
+from django.contrib.auth.forms import UserCreationForm
 from StuInfo import forms
 from StuInfo import models
 from StuInfo import control
 import datetime
 
 # Create your views here.
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            new_user = form.save()
+            return HttpResponseRedirect('/accounts/login/')
+    else:
+        form = UserCreationForm()
+    return render_to_response('registration/register.html', {'form': form})
 
 def add(request):
     if request.method == 'POST':
