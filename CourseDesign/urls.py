@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import login
 from StuInfo.views import *
 
 urlpatterns = [
@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^modify/$', modify),
     url(r'^successful/$', successful),
     url(r'^accounts/login/$', login),
-    url(r'^accounts/logout/$', logout),
+    url(r'^accounts/logout/$', logout_view),
     url(r'^accounts/register/$', register),
+    url(r'^accounts/profile/$', logined),
 ]

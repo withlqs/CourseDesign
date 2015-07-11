@@ -2,14 +2,29 @@
 from django.shortcuts import *
 from django.http import *
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import logout
 from StuInfo import forms
 from StuInfo import models
 from StuInfo import control
 import datetime
 
 # Create your views here.
+def logout_view(request):
+    if request.user.is_authenticated():
+        logout(request)
+
+    return HttpResponseRedirect('/accounts/login/')
+
+
+def logined(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/search/')
+
+    return HttpResponseRedirect('/accounts/login/')
 
 def register(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/search/')
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -17,9 +32,11 @@ def register(request):
             return HttpResponseRedirect('/accounts/login/')
     else:
         form = UserCreationForm()
-    return render_to_response('registration/register.html', {'form': form})
+    return render_to_response('registration/register.html', {'form': form}, context_instance=RequestContext(request))
 
 def add(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login/')
     if request.method == 'POST':
         form = forms.AddForm(request.POST)
         if form.is_valid():
@@ -29,9 +46,11 @@ def add(request):
     else:
         form = forms.AddForm()
 
-    return render_to_response('add.html', {'form': form})
+    return render_to_response('add.html', {'form': form}, context_instance=RequestContext(request))
 
 def delete(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login/')
     if request.method == 'GET':
         query_set = models.Student.objects.filter(StudentID=request.GET['StudentID'])
         if query_set:
@@ -41,11 +60,13 @@ def delete(request):
     raise Http404
 
 def modify(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login/')
     if request.method == 'GET':
         query_set = models.Student.objects.filter(StudentID=request.GET['StudentID'])
         if query_set:
             form = control.ModelToForm(query_set[0])
-            return render_to_response('modify.html', {'form': form})
+            return render_to_response('modify.html', {'form': form}, context_instance=RequestContext(request))
     if request.method == 'POST':
         form = forms.AddForm(request.POST)
         if form.is_valid():
@@ -56,9 +77,13 @@ def modify(request):
     raise Http404
 
 def search(request):
-    return render_to_response('search.html')
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login/')
+    return render_to_response('search.html', context_instance=RequestContext(request))
 
 def view(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login/')
     if request.method == 'POST':
         remain = models.Student.objects
 
@@ -98,13 +123,17 @@ def view(request):
         render_list = []
         for item in list(remain.all()):
             render_list.append(item)
-        return render_to_response('view.html', {'render_list': render_list})
+        return render_to_response('view.html', {'render_list': render_list}, context_instance=RequestContext(request))
     else:
         raise Http404
 
 
 def successful(request):
-    return render_to_response('successful.html')
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login/')
+    return render_to_response('successful.html', {}, context_instance=RequestContext(request))
 
 def index(request):
-    return render_to_response('index.html', {'current_date': datetime.datetime.now()})
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login/')
+    return render_to_response('index.html', {'current_date': datetime.datetime.now()}, context_instance=RequestContext(request))
