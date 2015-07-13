@@ -12,7 +12,9 @@ function frame_open(target_url) {
 }
 </script> 
 <center>
+    <br/>
     {% if logined %}当前用户：{{ user }}&nbsp;&nbsp;&nbsp;<br/>{% endif %}<br/>
+    <a href="javascript:frame_open('/?pure=1')">主页</a><br/> 
     {% if not logined %}<a href="javascript:frame_open('/accounts/login/')">用户登录</a><br/>  {% endif %}
     {% if not logined %}<a href="javascript:frame_open('/accounts/register/')">用户注册</a><br/>  {% endif %}
     {% if logined %}<a href="javascript:frame_open('/accounts/logout/')">退出登录</a><br/> {% endif %}
