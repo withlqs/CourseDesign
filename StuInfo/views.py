@@ -10,20 +10,35 @@ from django.db import IntegrityError
 from StuInfo import forms
 from StuInfo import models
 from StuInfo import control
+from django.contrib.auth import views
 import datetime
 
 # Create your views here.
+
+def login_view(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/search/')
+    return views.login(request)
+
+def sidebar(request):
+    if request.user.is_authenticated():
+        return render_to_response('sidebar.html', {
+            'logined': True,
+            'user': request.user.username
+            }, context_instance=RequestContext(request))
+    return render_to_response('sidebar.html', {
+        'logined': False,
+        }, context_instance=RequestContext(request))
+
+
 def logout_view(request):
     if request.user.is_authenticated():
         logout(request)
-
     return HttpResponseRedirect('/accounts/login/')
-
 
 def logined(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/')
-
+        return HttpResponseRedirect('/search/')
     return HttpResponseRedirect('/accounts/login/')
 
 def register(request):
@@ -39,7 +54,6 @@ def register(request):
         form = UserCreationForm()
     return render_to_response('registration/register.html', {
         'form': form,
-        'login': True
         }, context_instance=RequestContext(request))
 
 def add(request):
@@ -53,19 +67,13 @@ def add(request):
                 info.save()
             except IntegrityError:
                 return render_to_response('duplicate.html', {
-                    'search': True,
-                    'add': True,
-                    'logout': True,
                     'user': request.user.username
                     })
-            return HttpResponseRedirect('/successful/?op=add')
+                return HttpResponseRedirect('/successful/?op=add')
     else:
         form = forms.AddForm()
-
     return render_to_response('add.html', {
         'form': form,
-        'search': True,
-        'logout': True,
         'user': request.user.username
         }, context_instance=RequestContext(request))
 
@@ -77,7 +85,6 @@ def delete(request):
         if query_set:
             query_set.delete()
             return HttpResponseRedirect('/successful/?op=del')
-
     raise Http404
 
 def modify(request):
@@ -89,13 +96,10 @@ def modify(request):
             form = control.ModelToForm(query_set[0])
             return render_to_response('modify.html', {
                 'form': form,
-                'search': True,
-                'add': True,
-                'logout': True,
                 'user': request.user.username
                 }, context_instance=RequestContext(request))
-    if request.method == 'POST':
-        form = forms.AddForm(request.POST)
+            if request.method == 'POST':
+                form = forms.AddForm(request.POST)
         if form.is_valid():
             models.Student.objects.filter(StudentID=request.POST['StudentID']).delete()
             info = control.FormToModel(form)
@@ -103,21 +107,31 @@ def modify(request):
                 info.save()
             except IntegrityError:
                 return render_to_response('duplicate.html', {
-                    'search': True,
-                    'add': True,
-                    'logout': True,
                     'user': request.user.username
                     })
-            return HttpResponseRedirect('/successful/?op=mod')
+                return HttpResponseRedirect('/successful/?op=mod')
     raise Http404
 
 def search(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login/')
+    if not request.method == 'GET':
+        raise Http404
+    op = {
+            'add': '添加',
+            'del': '删除',
+            'mod': '修改',
+            'reg': '注册'
+            }
+    try:
+        op_get = request.GET['op']
+    except MultiValueDictKeyError:
+        return render_to_response('search.html', {}, context_instance=RequestContext(request))
+    if not op_get in op:
+        raise Http404
     return render_to_response('search.html', {
-        'add': True,
-        'logout': True,
-        'user': request.user.username
+        'user': request.user.username,
+        'op': op[op_get]
         }, context_instance=RequestContext(request))
 
 def view(request):
@@ -125,9 +139,7 @@ def view(request):
         return HttpResponseRedirect('/accounts/login/')
     if request.method == 'POST':
         remain = models.Student.objects
-
         """ElementList = ['StudentID', 'Name', 'PhoneNumber', 'Email', 'Address', 'Birthday']"""
-
         if request.POST.getlist('StudentIDEnable'):
             if request.POST.getlist('StudentIDPart'):
                 remain = remain.filter(StudentID__icontains=request.POST['StudentID'])
@@ -158,31 +170,24 @@ def view(request):
                 remain = remain.filter(Birthday__icontains=request.POST['Birthday'])
             else:
                 remain = remain.filter(Birthday=request.POST['Birthday'])
-
         render_list = []
         for item in list(remain.all()):
             render_list.append(item)
         return render_to_response('view.html', {
             'render_list': render_list,
-            'add': True,
-            'logout': True,
-            'search': True,
             'user': request.user.username
             }, context_instance=RequestContext(request))
-    
+
     if request.method == 'GET':
         if request.GET['all'] == "1":
             render_list = []
-            for item in list(models.Student.objects.all()):
-                render_list.append(item)
-            return render_to_response('view.html', {
-                'render_list': render_list,
-                'add': True,
-                'logout': True,
-                'search': True,
-                'user': request.user.username
-                }, context_instance=RequestContext(request))
-        raise Http404
+        for item in list(models.Student.objects.all()):
+            render_list.append(item)
+        return render_to_response('view.html', {
+            'render_list': render_list,
+            'user': request.user.username
+            }, context_instance=RequestContext(request))
+    raise Http404
 
 def successful(request):
     if not request.user.is_authenticated():
@@ -202,20 +207,14 @@ def successful(request):
     if not request.GET['op'] in op:
         raise Http404
     return render_to_response('successful.html', {
-        'add': True,
-        'logout': True,
-        'search': True,
         'user': request.user.username,
         'operation': op[request.GET['op']]
         }, context_instance=RequestContext(request))
 
 def index(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/accounts/login/')
+    """if not request.user.is_authenticated():
+       return HttpResponseRedirect('/accounts/login/')"""
     return render_to_response('index.html', {
         'current_date': datetime.datetime.now(),
-        'add': True,
-        'logout': True,
-        'search': True,
         'user': request.user.username
         }, context_instance=RequestContext(request))

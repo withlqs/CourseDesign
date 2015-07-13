@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth import views
 from StuInfo.views import *
+from CourseDesign import settings
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -27,9 +28,10 @@ urlpatterns = [
     url(r'^delete/$', delete),
     url(r'^modify/$', modify),
     url(r'^successful/$', successful),
-    url(r'^accounts/login/$', views.login),
+    url(r'^accounts/login/$', login_view),
     url(r'^accounts/logout/$', logout_view),
     url(r'^accounts/register/$', register),
     url(r'^accounts/profile/$', logined),
-    url(r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT}),
+    url(r'^sidebar/', sidebar),
+    url(r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root': settings.STATIC_ROOT}),
 ]

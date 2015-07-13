@@ -1,0 +1,24 @@
+{% extends "sidebar_base.html" %}
+
+{% block head %}
+<title>导航栏</title>
+{% endblock %}
+
+{% block body %}
+
+<script type="text/javascript">  
+function frame_open(target_url) {
+    window.parent.frames[1].location = target_url;
+}
+</script> 
+<center>
+    {% if logined %}当前用户：{{ user }}&nbsp;&nbsp;&nbsp;<br/>{% endif %}<br/>
+    {% if not logined %}<a href="javascript:frame_open('/accounts/login/')">用户登录</a><br/>  {% endif %}
+    {% if not logined %}<a href="javascript:frame_open('/accounts/register/')">用户注册</a><br/>  {% endif %}
+    {% if logined %}<a href="javascript:frame_open('/accounts/logout/')">退出登录</a><br/> {% endif %}
+    {% if logined %}<a href="javascript:frame_open('/add/')">添加信息</a><br/> {% endif %}
+    {% if logined %}<a href="javascript:frame_open('/search/')">检索信息</a><br/> {% endif %}
+    {% if logined %}<a href="javascript:frame_open('/search/?op=mod')">修改信息</a><br/> {% endif %}
+    {% if logined %}<a href="javascript:frame_open('/search/?op=del')">删除信息</a><br/> {% endif %}
+</center>
+{% endblock %}
