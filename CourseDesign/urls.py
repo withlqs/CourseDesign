@@ -31,4 +31,5 @@ urlpatterns = [
     url(r'^accounts/logout/$', logout_view),
     url(r'^accounts/register/$', register),
     url(r'^accounts/profile/$', logined),
+    url(r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.STATIC_ROOT}),
 ]
