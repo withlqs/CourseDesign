@@ -1,4 +1,5 @@
 #-*- coding: UTF-8 -*- 
+import os
 from django.shortcuts import *
 from django.http import *
 from django.contrib.auth.forms import UserCreationForm
@@ -11,7 +12,10 @@ from StuInfo import forms
 from StuInfo import models
 from StuInfo import control
 from django.contrib.auth import views
+from CourseDesign.settings import BASE_DIR
 import datetime
+import xlwt3
+import random
 
 # Create your views here.
 
@@ -135,6 +139,28 @@ def search(request):
         'user': request.user.username,
         'op': op[op_get]
         }, context_instance=RequestContext(request))
+def getXls(infoList):
+    """ElementList = ['StudentID', 'Name', 'PhoneNumber', 'Email', 'Address', 'Birthday']"""
+    wb = xlwt3.Workbook()
+    sheet = wb.add_sheet("查询结果")
+    sheet.write(0, 0, "学号")
+    sheet.write(0, 1, "姓名")
+    sheet.write(0, 2, "电话")
+    sheet.write(0, 3, "电子邮箱")
+    sheet.write(0, 4, "地址")
+    sheet.write(0, 5, "出生日期")
+    for i in range(0, len(infoList)):
+        sheet.write(i+1, 0, infoList[i].StudentID)
+        sheet.write(i+1, 1, infoList[i].Name)
+        sheet.write(i+1, 2, infoList[i].PhoneNumber)
+        sheet.write(i+1, 3, infoList[i].Email)
+        sheet.write(i+1, 4, infoList[i].Address)
+        sheet.write(i+1, 5, str(infoList[i].Birthday))
+
+    fileName = str(random.randint(1, 10000000))+'.xls'
+    path = os.path.join(BASE_DIR, "StuInfo/static/"+fileName).replace('\\', '/')
+    wb.save(path)
+    return "/static/"+fileName
 
 def view(request):
     if not request.user.is_authenticated():
@@ -175,9 +201,11 @@ def view(request):
         render_list = []
         for item in list(remain.all()):
             render_list.append(item)
+        xls_url = getXls(render_list)
         return render_to_response('view.html', {
             'render_list': render_list,
-            'user': request.user.username
+            'user': request.user.username,
+            'xls': getXls(render_list)
             }, context_instance=RequestContext(request))
 
     if request.method == 'GET':
@@ -187,7 +215,8 @@ def view(request):
                 render_list.append(item)
             return render_to_response('view.html', {
                 'render_list': render_list,
-                'user': request.user.username
+                'user': request.user.username,
+                'xls': getXls(render_list)
                 }, context_instance=RequestContext(request))
     raise Http404
 

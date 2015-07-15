@@ -5,21 +5,25 @@
 {% endblock %}
 
 {% block body %}
-    <table border="1" style="border-collapse:collapse;">
-        {% for item in render_list %}
-        <tr>
-            <td>{{ item.StudentID }}</td>
-            <td>{{ item.Name }}</td>
-            <td>{{ item.PhoneNumber }}</td>
-            <td>{{ item.Email }}</td>
-            <td>{{ item.Address }}</td>
-            <td>{{ item.Birthday }}</td>
-            <td><a href="/modify/?StudentID={{ item.StudentID }}">修改</a></td>
-            <td><a href="/delete/?StudentID={{ item.StudentID }}">删除</a></td>
-        </tr>
-        {% empty %}
-        <br/>
-        无符合条件的信息
-        {% endfor %}
-    </table>
+<br/>
+<table border="1" style="border-collapse:collapse;">
+    {% for item in render_list %}
+    <tr>
+        <td>{{ item.StudentID }}</td>
+        <td>{{ item.Name }}</td>
+        <td>{{ item.PhoneNumber }}</td>
+        <td>{{ item.Email }}</td>
+        <td>{{ item.Address }}</td>
+        <td>{{ item.Birthday }}</td>
+        <td><a href="/modify/?StudentID={{ item.StudentID }}">修改</a></td>
+        <td><a href="/delete/?StudentID={{ item.StudentID }}">删除</a></td>
+    </tr>
+    {% empty %}
+    <br/>
+    无符合条件的信息
+    {% endfor %}
+    {% if render_list and xls %}
+    <tr><td colspan="8"><center><a href="{{ xls }}">导出到Excel表格</a></center></td></tr>
+    {% endif %}
+</table>
 {% endblock %}
